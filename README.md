@@ -1,1 +1,1 @@
-# Python
+# Repository for Python classes
