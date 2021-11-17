@@ -1,2 +1,5 @@
 kafka/kafka.py
 .vscode/settings.json
+*.pyc
+
+

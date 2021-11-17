@@ -1,6 +1,6 @@
 import unittest
 
-from devices.Device import *
+from  Device import *
 
 
 
