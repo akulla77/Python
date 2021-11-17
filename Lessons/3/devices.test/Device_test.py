@@ -3,6 +3,7 @@ import unittest
 from devices.Device import *
 
 
+
 class DeviceTestCase(unittest.TestCase):
     def test_open_device(self):
         self.assertIsInstance(open_device('/devices/dev0'), Device)

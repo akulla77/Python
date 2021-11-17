@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import List
 
-from devices.DeviceMode import DeviceMode
+from DeviceMode import DeviceMode
 
 
 def __take_line(collection: List[str]) -> str:
