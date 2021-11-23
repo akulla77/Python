@@ -11,6 +11,7 @@ def take_line(collection: List[str]) -> str:
         raise IOError('No more for reading')
 
 
+
 @dataclass
 class Device:
     mode: DeviceMode
