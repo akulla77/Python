@@ -6,7 +6,7 @@ from DeviceMode import DeviceMode
 
 def take_line(collection: List[str]) -> str:
     try:
-        return collection.pop(0)
+        return collection.pop()
     except IndexError:
         raise IOError('No more for reading')
 
@@ -47,10 +47,10 @@ def read_line(device: Device) -> str:
     return take_line(device.data)
 
 
-def write_line(device: Device,line :str) -> str:
+def write_line(device: Device,line :str):
     if  not is_writable_device(device):
         raise PermissionError('Writing to the devices are not allowed.')
-    return device.data.append(line)
+    device.data.append(line)
 
 
 def open_device(name: str) -> Device:
