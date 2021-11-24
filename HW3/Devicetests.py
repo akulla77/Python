@@ -23,7 +23,7 @@ class DeviceTestCase(unittest.TestCase):
 
     def test_write_line(self):
         self.assertRaises(PermissionError, write_line, open_device('/devices/dev0'), 'Python')
-        d = open_device('/devices/dev3')
+        d = open_device('/devices/dev2')
         write_line(d,'Python')
         self.assertEqual('Python', read_line(d))
 

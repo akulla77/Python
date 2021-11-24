@@ -6,7 +6,7 @@ from DeviceMode import DeviceMode
 
 def take_line(collection: List[str]) -> str:
     try:
-        return collection.pop()
+        return collection.pop(0)
     except IndexError:
         raise IOError('No more for reading')
 
