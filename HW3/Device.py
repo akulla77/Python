@@ -11,6 +11,11 @@ def take_line(collection: List[str]) -> str:
         raise IOError('No more for reading')
 
 
+# def append_line(collection: List[str], line: str)->str:
+#     try:
+#         return collection.append(line)
+#     except 
+
 
 @dataclass
 class Device:
@@ -37,9 +42,15 @@ def read_line(device: Device) -> str:
     :exception PermissionError если устройство не открыто на чтение
     """
     if not is_readable_device(device):
-        raise PermissionError('Reading from the devices not allowed.')
+        raise PermissionError('Reading from the devices are not allowed.')
 
     return take_line(device.data)
+
+
+def write_line(device: Device,line :str) -> str:
+    if  not is_writable_device(device):
+        raise PermissionError('Writing to the devices are not allowed.')
+    return device.data.append(line)
 
 
 def open_device(name: str) -> Device:
