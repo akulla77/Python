@@ -1,2 +1,2 @@
 # Repository for Python classes
-Control Task: Messenger
+Control Task: Messanger
