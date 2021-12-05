@@ -1,4 +1,5 @@
 from aiohttp import web
+import asyncpg
 
 
 routes = web.RouteTableDef()
@@ -8,6 +9,15 @@ routes = web.RouteTableDef()
 async def root(_) -> web.Response:
     print(web.HTTPOk)
     raise web.HTTPOk
+
+
+
+
+
+
+
+
+
 
 
 if __name__ == '__main__':
