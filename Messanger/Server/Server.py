@@ -2,7 +2,7 @@ from aiohttp import web
 from asyncpg import connection
 
 import psycopg2
-import asyncio
+
 
 routes = web.RouteTableDef()
 
