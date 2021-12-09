@@ -1,10 +1,17 @@
+from typing import List
 from aiohttp import web
 from asyncpg import connection
+from ..Models import User,Message,ContentType
+
 
 import psycopg2
-
+messages = [Message]
 
 routes = web.RouteTableDef()
+
+# @routes.post('/add')
+# async def add():
+    
 
 
 
