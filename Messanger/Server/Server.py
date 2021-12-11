@@ -1,9 +1,13 @@
 from typing import List
-from aiohttp import web
+from aiohttp.web_response import Response
 from asyncpg import connection
-from ..Models import User,Message,ContentType
+from User import User
+from Message import Message
+from ContentType import ContentType
+import requests
+import json
 
-
+from aiohttp import web
 import psycopg2
 messages = [Message]
 
@@ -11,14 +15,22 @@ routes = web.RouteTableDef()
 
 # @routes.post('/add')
 # async def add():
-    
+messages = [Message]
 
 
+def first():
+
+        u1 = User('1','p')
+        u2 = User('2','p')
+        m = Message('t\i',u1,u2,ContentType.TEXT)
+        messages.append(m)
 
 
 @routes.get('/')
 async def root(_) -> web.Response:
-    print(web.HTTPOk)
+    mm = messages.pop()
+    mmj = mm.to_json()
+    print(str(mmj))
     raise web.HTTPOk
 
 
@@ -43,7 +55,7 @@ def connect_to_db():
 if __name__ == '__main__':
     
     connect_to_db()
-
+    first()
 
     app = web.Application()
     app.add_routes(routes)

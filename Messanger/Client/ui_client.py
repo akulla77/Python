@@ -10,12 +10,14 @@
 
 from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
     QMetaObject, QObject, QPoint, QRect,
-    QSize, QTime, QUrl, Qt)
+    QSize, QTime, QUrl, Qt, Slot)
 from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QPushButton, QSizePolicy, QWidget)
+import requests
+
 
 class Ui_Form(object):
     def setupUi(self, Form):
@@ -26,7 +28,7 @@ class Ui_Form(object):
         self.pushButton.setObjectName(u"pushButton")
         self.pushButton.setGeometry(QRect(310, 90, 56, 17))
 
-
+        self.pushButton.clicked.connect(Rootrequest)
         
         self.retranslateUi(Form)
 
@@ -38,3 +40,7 @@ class Ui_Form(object):
         self.pushButton.setText(QCoreApplication.translate("Form", u"PushButton", None))
     # retranslateUi
 
+@Slot()
+def Rootrequest():
+    resp = requests.get('http://localhost:3333/')
+    print(resp.json)
