@@ -50,7 +50,7 @@ class Ui_MainWindow(object):
         self.statusbar.setObjectName(u"statusbar")
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.GetMessages)
-        self.timer.start(1000)
+        self.timer.start(5000)
         self.after =0
         MainWindow.setStatusBar(self.statusbar)
 
@@ -79,10 +79,16 @@ class Ui_MainWindow(object):
 
     @Slot()
     def SendMessage(self):
+        # try:
+        #     resp = requests.get('http://localhost:3333/messages', json ={'after':self.after})
+        #     t= resp.json()['name']
+        # except Exception  as e:
+        #     print(str(e))
+        #     return
         name= self.lineEdit.text()
         text = self.textEdit.toPlainText()
 
-        resp = requests.post('http:/localhost:3333/send', json = {'name': name,'text': text} )
+        resp = requests.post('http://localhost:3333/send', json = {'name': name,'text': text} )
         if resp.status_code != 200:
             print('Check inputs data') 
             return
@@ -92,11 +98,13 @@ class Ui_MainWindow(object):
     @Slot()
     def GetMessages(self):
         try:
-            resp = requests.get('http://localhost:3333/messages', params={'after':self.after})
-            messages = resp.json()['messages']
-            for message in messages:
-                self.print_message(message)
-                self.after = message[time]
-        except:
+            resp = requests.get('http://localhost:3333/messages', json ={'after':self.after})
+            t= resp.json()['name']
+            # messages = resp.json()['messages']
+            # for message in messages:
+            #     self.print_message(message)
+            #     self.after = message['time']
+        except Exception  as e:
+            print(str(e))
             return
 

@@ -1,37 +1,42 @@
-from typing import List
+from typing import Any, Dict, List
 from aiohttp.web_response import Response
 from asyncpg import connection
 from User import User
-from Message import Message
-from ContentType import ContentType
+from Mess import Mess
 import requests
 import json
-
+from datetime import datetime
 from aiohttp import web
 import psycopg2
-messages = [Message]
+
+
+messages = [Mess]
 
 routes = web.RouteTableDef()
 
-# @routes.post('/add')
-# async def add():
-messages = [Message]
 
 
-def first():
+@routes.post('/send')
+async def sendMessage(request: web.Request)->web.Response:
+    
+    data = dict(await request.json())
+    name = data['name']
+    text = data['text']
+    messages.append(Mess(text,name,'2'))
+    print(messages.pop())
+    return web.HTTPOk()
 
-        u1 = User('1','p')
-        u2 = User('2','p')
-        m = Message('t\i',u1,u2,ContentType.TEXT)
-        messages.append(m)
 
 
-@routes.get('/')
-async def root(_) -> web.Response:
-    mm = messages.pop()
-    mmj = mm.to_json()
-    print(str(mmj))
-    raise web.HTTPOk
+@routes.get('/messages')
+async def GetMessages(request: web.Request)-> Dict[str,Any]:
+
+    data = dict(await request.json())
+    after = data['after']   
+    d= {'time': str(datetime.now()) ,'text':'message text','name':'Iliya'  }
+    
+    return d
+
 
 
 
@@ -46,6 +51,7 @@ def connect_to_db():
         cur.execute('SELECT version()')
         db_version = cur.fetchone()
         print(db_version)
+        return cur
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
        
@@ -53,10 +59,7 @@ def connect_to_db():
 
 
 if __name__ == '__main__':
-    
-    connect_to_db()
-    first()
-
     app = web.Application()
     app.add_routes(routes)
+    app['storage'] = connect_to_db()
     web.run_app(app,host ='localhost',port=3333)
