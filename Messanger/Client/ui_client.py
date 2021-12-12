@@ -66,9 +66,9 @@ class Ui_MainWindow(object):
 
 
     def print_message(self,mes):
-            t= mes['time']
-            dt = datetime.fromtimestamp(t).strftime('%H:%M:%S')
-            self.textBrowser.append(dt +' '+ mes['name'])
+            t=  mes['time']
+            dt = datetime.fromisoformat(t).strftime( "%m/%d/%Y, %H:%M:%S")
+            self.textBrowser.append(dt +' '+ mes['src']+ '->'+mes['dest'])
             self.textBrowser.append(mes['text'])
             self.textBrowser.append('')
             
@@ -96,10 +96,10 @@ class Ui_MainWindow(object):
             resp = requests.get('http://localhost:3333/messages', json ={'after':self.after})
             t= resp.json()
             print(t)
-            # messages = resp.json()['messages']
-            # for message in messages:
-            #     self.print_message(message)
-            #     self.after = message['time']
+            messages = resp.json()
+            for message in messages:
+                self.print_message(message)
+                self.after = message['time']
         except Exception  as e:
             print(str(e))
             return

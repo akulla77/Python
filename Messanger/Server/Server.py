@@ -1,4 +1,3 @@
-from typing import Any, Dict, List
 from aiohttp.web_response import Response
 from asyncpg import connection
 from User import User
@@ -9,12 +8,21 @@ from datetime import datetime
 from aiohttp import web
 import psycopg2
 from MesD import MesD
+from py_linq import Enumerable
 
 
-messages = []
+messages= Enumerable([])
 
 routes = web.RouteTableDef()
 
+# возвращаем свободных пользователей
+# для отправки полный список исключа себя
+Users = {
+    'Nick': 1,
+    'Zack': 1,
+    'John': 1,
+    'Ann': 1
+}
 
 
 @routes.post('/send')
@@ -23,7 +31,7 @@ async def sendMessage(request: web.Request)->web.Response:
     data = dict(await request.json())
     name = data['name']
     text = data['text']
-    messages.append(Mess(text,name,'2'))
+    messages.append(Mess(text,name,'2', ''))
     
     return web.HTTPOk()
 
@@ -31,22 +39,32 @@ async def sendMessage(request: web.Request)->web.Response:
 
 @routes.get('/messages')
 async def GetMessages(request: web.Request)-> web.Response:
+    data = dict(await request.json())
+    after = data['after']   
+    if  after == 0:
+        after = datetime.min.strftime( "%m/%d/%Y, %H:%M:%S")
 
-    # data = dict(await request.json())
-    # after = data['after']   
+    t = []
 
-    t = [m.to_json()  for m in messages]
+    for m in messages.order_by(lambda x: x.Time).to_list():
+        if datetime.fromisoformat(m.Time).strftime( "%m/%d/%Y, %H:%M:%S") > after :
+             t.append(m.to_json())
 
-    print(t)
-    
+    print(t)  
     return web.json_response(t)
 
-@routes.get('/contacts')
-async def getContacts(request: web.Request)-> web.Response:
 
-# user.contact to json
 
-    return web.json_response()
+
+@routes.get('/users')
+async def getUsers(request: web.Request)-> web.Response:
+    
+    f = []
+    
+    for key , value in Users.items():
+        if value == 1:
+            f.append(str(key))
+    return web.json_response(f)
 
 
 
@@ -69,8 +87,8 @@ def connect_to_db():
 
 
 if __name__ == '__main__':
-    # for i in range(3):
-    #     messages.append(Mess(str(i),'1','2'))
+    for i in range(3):
+        messages.append(Mess(str(i),'1','2',str(datetime.now())))
 
     app = web.Application()
     app.add_routes(routes)

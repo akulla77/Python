@@ -1,4 +1,3 @@
-
 from PySide6.QtWidgets import QMainWindow
 # from Python.Messanger.Client.ui_client import Ui_MainWindow
 
