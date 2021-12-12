@@ -79,12 +79,7 @@ class Ui_MainWindow(object):
 
     @Slot()
     def SendMessage(self):
-        # try:
-        #     resp = requests.get('http://localhost:3333/messages', json ={'after':self.after})
-        #     t= resp.json()['name']
-        # except Exception  as e:
-        #     print(str(e))
-        #     return
+
         name= self.lineEdit.text()
         text = self.textEdit.toPlainText()
 
@@ -99,7 +94,8 @@ class Ui_MainWindow(object):
     def GetMessages(self):
         try:
             resp = requests.get('http://localhost:3333/messages', json ={'after':self.after})
-            t= resp.json()['name']
+            t= resp.json()
+            print(t)
             # messages = resp.json()['messages']
             # for message in messages:
             #     self.print_message(message)

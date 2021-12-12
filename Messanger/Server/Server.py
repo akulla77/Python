@@ -8,9 +8,10 @@ import json
 from datetime import datetime
 from aiohttp import web
 import psycopg2
+from MesD import MesD
 
 
-messages = [Mess]
+messages = []
 
 routes = web.RouteTableDef()
 
@@ -23,20 +24,29 @@ async def sendMessage(request: web.Request)->web.Response:
     name = data['name']
     text = data['text']
     messages.append(Mess(text,name,'2'))
-    print(messages.pop())
+    
     return web.HTTPOk()
 
 
 
 @routes.get('/messages')
-async def GetMessages(request: web.Request)-> Dict[str,Any]:
+async def GetMessages(request: web.Request)-> web.Response:
 
-    data = dict(await request.json())
-    after = data['after']   
-    d= {'time': str(datetime.now()) ,'text':'message text','name':'Iliya'  }
+    # data = dict(await request.json())
+    # after = data['after']   
+
+    t = [m.to_json()  for m in messages]
+
+    print(t)
     
-    return d
+    return web.json_response(t)
 
+@routes.get('/contacts')
+async def getContacts(request: web.Request)-> web.Response:
+
+# user.contact to json
+
+    return web.json_response()
 
 
 
@@ -59,6 +69,9 @@ def connect_to_db():
 
 
 if __name__ == '__main__':
+    # for i in range(3):
+    #     messages.append(Mess(str(i),'1','2'))
+
     app = web.Application()
     app.add_routes(routes)
     app['storage'] = connect_to_db()

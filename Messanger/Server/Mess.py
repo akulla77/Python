@@ -1,7 +1,8 @@
 
 from typing import Dict,Any
+from  dataclasses import dataclass
 
-
+@dataclass
 class Mess:
     def __init__(self,text ,src ,dest,):
         self.__text= text
