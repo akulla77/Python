@@ -92,7 +92,7 @@ class Ui_MainWindow(object):
 
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.GetMessages)
-        self.timer.start(5000)
+        self.timer.start(1000)
         self.after =0
         self.User = ''
         self.Contact =''
@@ -128,6 +128,7 @@ class Ui_MainWindow(object):
     def RefreshLabels(self):
         
         self.username.setText(self.User)
+        self.contactname.setText(self.Contact)
         
 
 
@@ -151,7 +152,7 @@ class Ui_MainWindow(object):
         self.RefreshUser()
 
         self.User = self.listUsers.currentItem().text()
-        self.username = self.User
+
         requests.post('http://localhost:3333/user', json = {'user': self.User})
         self.listUsers.clear()
         self.listContacts.clear()
@@ -162,7 +163,7 @@ class Ui_MainWindow(object):
     @Slot()
     def OnClickContact(self):
         self.Contact = self.listContacts.currentItem().text()
-        self.contactname = self.Contact
+
         self.after = 0
         self.textBrowser.clear()
 
@@ -185,7 +186,7 @@ class Ui_MainWindow(object):
         dest = self.Contact
         time =  str(datetime.now())
         text = self.textEdit.toPlainText()
-
+        
         resp = requests.post('http://localhost:3333/send', json = {'src': src,'dest': dest, 'text': text, 'time': time} )
         if resp.status_code != 200:
             print('Check inputs data') 
@@ -197,8 +198,7 @@ class Ui_MainWindow(object):
     def GetMessages(self):
         try:
             resp = requests.get('http://localhost:3333/messages', json ={'after':self.after, 'src': self.User, 'dest': self.Contact})
-            # t= resp.json()
-            # print(t)
+
             messages = resp.json()
             for message in messages:
                 self.print_message(message)

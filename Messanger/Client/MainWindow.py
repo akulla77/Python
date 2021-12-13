@@ -1,5 +1,5 @@
 from PySide6.QtWidgets import QMainWindow
-# from Python.Messanger.Client.ui_client import Ui_MainWindow
+
 
 from ui_client import Ui_MainWindow
 
