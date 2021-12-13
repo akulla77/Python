@@ -24,7 +24,11 @@ import requests
 import json
 from datetime import datetime, time
 
+
+
 from requests.models import HTTPBasicAuth
+
+import clientconfig
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
@@ -135,7 +139,7 @@ class Ui_MainWindow(object):
 
     @Slot()
     def FillUser(self):
-        resp = requests.get('http://localhost:3333/users')
+        resp = requests.get(f'http://{clientconfig.host}:{clientconfig.port}/users')
         users = resp.json()
         if self.listUsers.count() != len(users):
             self.listUsers.clear()
@@ -143,7 +147,7 @@ class Ui_MainWindow(object):
         
     
     def RefreshUser(self):
-         requests.post('http://localhost:3333/userRefresh', json = {'user': self.User})
+         requests.post(f'http://{clientconfig.host}:{clientconfig.port}/userRefresh', json = {'user': self.User})
 
 
     @Slot()
@@ -153,7 +157,7 @@ class Ui_MainWindow(object):
 
         self.User = self.listUsers.currentItem().text()
 
-        requests.post('http://localhost:3333/user', json = {'user': self.User})
+        requests.post(f'http://{clientconfig.host}:{clientconfig.port}/user', json = {'user': self.User})
         self.listUsers.clear()
         self.listContacts.clear()
         self.after = 0
@@ -171,7 +175,7 @@ class Ui_MainWindow(object):
 
     @Slot()
     def FillContacts(self):
-        resp = requests.get('http://localhost:3333/contacts', json = {'user': self.User})
+        resp = requests.get(f'http://{clientconfig.host}:{clientconfig.port}/contacts', json = {'user': self.User})
         users = resp.json()
         if self.listContacts.count() != len(users):
             self.listContacts.clear()
@@ -187,7 +191,7 @@ class Ui_MainWindow(object):
         time =  str(datetime.now())
         text = self.textEdit.toPlainText()
         
-        resp = requests.post('http://localhost:3333/send', json = {'src': src,'dest': dest, 'text': text, 'time': time} )
+        resp = requests.post(f'http://{clientconfig.host}:{clientconfig.port}/send', json = {'src': src,'dest': dest, 'text': text, 'time': time} )
         if resp.status_code != 200:
             print('Check inputs data') 
             return
@@ -197,7 +201,7 @@ class Ui_MainWindow(object):
     @Slot()
     def GetMessages(self):
         try:
-            resp = requests.get('http://localhost:3333/messages', json ={'after':self.after, 'src': self.User, 'dest': self.Contact})
+            resp = requests.get(f'http://{clientconfig.host}:{clientconfig.port}/messages', json ={'after':self.after, 'src': self.User, 'dest': self.Contact})
 
             messages = resp.json()
             for message in messages:
