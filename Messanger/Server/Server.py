@@ -6,6 +6,8 @@ from datetime import datetime
 from aiohttp import web
 from py_linq import Enumerable
 
+import serverconfig
+
 
 messages= Enumerable([])
 
@@ -115,4 +117,4 @@ if __name__ == '__main__':
     
     app = web.Application()
     app.add_routes(routes)
-    web.run_app(app,host ='localhost',port=3333)
+    web.run_app(app,host = serverconfig.host,port=int(serverconfig.port))
