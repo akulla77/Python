@@ -25,13 +25,18 @@ Users = {
 }
 
 
+
+
 @routes.post('/send')
 async def sendMessage(request: web.Request)->web.Response:
     
     data = dict(await request.json())
-    name = data['name']
+    src = data['src']
+    dest = data['dest']
     text = data['text']
-    messages.append(Mess(text,name,'2', ''))
+    time = data['time']
+
+    messages.append(Mess(text,src,dest,time))
     
     return web.HTTPOk()
 
@@ -41,18 +46,57 @@ async def sendMessage(request: web.Request)->web.Response:
 async def GetMessages(request: web.Request)-> web.Response:
     data = dict(await request.json())
     after = data['after']   
+    src = data['src']
+    dest = data['dest']
     if  after == 0:
-        after = datetime.min.strftime( "%m/%d/%Y, %H:%M:%S")
+        # after = datetime.min.strftime( "%m/%d/%Y, %H:%M:%S")
+        after = datetime.min
+    else:
+        after= datetime.strptime(after, '%Y-%m-%d %H:%M:%S.%f')
 
     t = []
 
     for m in messages.order_by(lambda x: x.Time).to_list():
-        if datetime.fromisoformat(m.Time).strftime( "%m/%d/%Y, %H:%M:%S") > after :
+        if datetime. strptime(m.Time, '%Y-%m-%d %H:%M:%S.%f')> after:
+            if (m.Src == src and m.Dest == dest) or (m.Src == dest and m.Dest==src):
              t.append(m.to_json())
 
     print(t)  
     return web.json_response(t)
 
+
+
+@routes.get('/contacts')
+async def GetConatcts(request: web.Request)-> web.Response:
+    f = []
+    data = dict(await request.json())
+    user = data['user']
+    for key in Users.keys():
+        if key != user:
+            f.append(str(key))
+    
+    print (f)
+    return web.json_response(f)
+
+
+
+
+@routes.post('/userRefresh')
+async def RefreshUser(request: web.Request)-> web.Response:
+    data = dict(await request.json())
+    user = data['user']
+    if  user != '':
+        Users[user] = 1
+
+    return web.HTTPOk()
+
+@routes.post('/user')
+async def ChooseUser(request: web.Request) ->  web.Response:
+    data = dict(await request.json())
+    user = data['user']
+    Users[user] = 0
+
+    return web.HTTPOk()
 
 
 
@@ -64,6 +108,8 @@ async def getUsers(request: web.Request)-> web.Response:
     for key , value in Users.items():
         if value == 1:
             f.append(str(key))
+    
+    print (f)
     return web.json_response(f)
 
 
